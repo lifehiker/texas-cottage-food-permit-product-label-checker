@@ -1,14 +1,12 @@
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { auth } from "@/auth";
 import { trackServerEvent } from "@/lib/analytics";
 import { db } from "@/lib/db";
+import { getOriginFromHeaders } from "@/lib/request-url";
 import { getStripe } from "@/lib/stripe";
-
-function getRequestOrigin(request: Request) {
-  return new URL(request.url).origin;
-}
 
 const schema = z.object({
   planKey: z.enum(["label_pack_29", "seller_pro_monthly_12", "seller_pro_yearly_99"]),
@@ -20,8 +18,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Sign in before checkout." }, { status: 401 });
   }
 
-  const { planKey } = schema.parse(await request.json());
-  const origin = getRequestOrigin(request);
+  const parsed = schema.safeParse(await request.json());
+  if (!parsed.success) {
+    return NextResponse.json(
+      {
+        message: "Invalid checkout payload.",
+        issues: parsed.error.flatten(),
+      },
+      { status: 400 },
+    );
+  }
+
+  const { planKey } = parsed.data;
+  const origin = getOriginFromHeaders(await headers());
   await trackServerEvent("checkout_started", {
     userId: session.user.id,
     planKey,

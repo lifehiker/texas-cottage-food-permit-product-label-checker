@@ -5,7 +5,6 @@ import { Card } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { notFound } from "next/navigation";
-import { updateRuleConditions } from "@/app/admin/rules/actions";
 
 export default async function AdminRulesPage() {
   const session = await auth();
@@ -25,8 +24,7 @@ export default async function AdminRulesPage() {
       {rules.map((rule) => (
         <Card key={rule.id} className="space-y-2">
           <h2 className="text-xl font-semibold">{rule.category}</h2>
-          <form action={updateRuleConditions} className="space-y-3">
-            <input type="hidden" name="id" value={rule.id} />
+          <form action={`/api/admin/rules/${rule.id}`} method="post" className="space-y-3">
             <label className="block space-y-2 text-sm text-[var(--ink-soft)]">
               <span>Outcome</span>
               <input

@@ -29,7 +29,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Saving is not available on the current plan." }, { status: 403 });
   }
 
-  const payload = schema.parse(await request.json());
+  const parsed = schema.safeParse(await request.json());
+  if (!parsed.success) {
+    return NextResponse.json(
+      {
+        message: "Invalid label payload.",
+        issues: parsed.error.flatten(),
+      },
+      { status: 400 },
+    );
+  }
+
+  const payload = parsed.data;
 
   await db.savedLabel.create({
     data: {

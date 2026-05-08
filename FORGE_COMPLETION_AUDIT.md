@@ -4,6 +4,7 @@
 
 - Next.js 15 App Router scaffold with standalone output: [next.config.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/next.config.ts:1)
 - Shared visual shell, nav, footer, and custom styling: [src/app/layout.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/layout.tsx:1), [src/app/globals.css](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/globals.css:1), [src/components/layout/site-header.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/layout/site-header.tsx:1), [src/components/layout/site-footer.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/layout/site-footer.tsx:1)
+- Deployment env template for zero-config plus optional integrations: [.env.example](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/.env.example:1)
 
 ## Data Model
 
@@ -12,7 +13,7 @@
 
 ## Auth
 
-- Auth.js / NextAuth setup with local credentials fallback, trusted reverse-proxy host handling, and optional Google OAuth: [src/auth.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/auth.ts:1), [src/app/api/auth/[...nextauth]/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/auth/[...nextauth]/route.ts:1), [src/app/login/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/login/page.tsx:1)
+- Auth.js / NextAuth setup with local credentials fallback, trusted reverse-proxy host handling, and optional Google OAuth: [src/auth.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/auth.ts:1), [src/app/api/auth/[...nextauth]/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/auth/[...nextauth]/route.ts:1), [src/app/login/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/login/page.tsx:1), [src/components/auth/login-form.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/auth/login-form.tsx:1), [src/components/auth/sign-out-button.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/auth/sign-out-button.tsx:1), [src/app/api/session/login/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/session/login/route.ts:1), [src/app/api/session/logout/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/session/logout/route.ts:1)
 
 ## Core Workflows
 
@@ -24,7 +25,7 @@
 
 ## Billing, Email, And Storage Fallbacks
 
-- Stripe lazy init and guarded checkout/webhook paths, including request-host-aware redirects: [src/lib/stripe.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/lib/stripe.ts:1), [src/app/api/checkout/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/checkout/route.ts:1), [src/app/api/webhooks/stripe/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/webhooks/stripe/route.ts:1)
+- Stripe lazy init and guarded checkout/webhook paths, including request-host-aware redirects instead of bind-host URLs: [src/lib/stripe.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/lib/stripe.ts:1), [src/app/api/checkout/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/checkout/route.ts:1), [src/app/api/webhooks/stripe/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/webhooks/stripe/route.ts:1)
 - Resend lazy init and fallback delivery handling: [src/lib/resend.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/lib/resend.ts:1), [src/app/api/leads/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/leads/route.ts:1)
 - Local SQLite persistence and Prisma client: [src/lib/db.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/lib/db.ts:1), [prisma/dev.db](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/prisma/dev.db:1)
 
@@ -43,18 +44,20 @@
 
 ## Admin
 
-- Protected rules viewer with admin-email guard: [src/app/admin/rules/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/admin/rules/page.tsx:1)
+- Protected rules viewer with admin-email guard and route-based updates that avoid server-action deployment drift: [src/app/admin/rules/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/admin/rules/page.tsx:1), [src/app/api/admin/rules/[id]/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/admin/rules/[id]/route.ts:1)
 
 ## SEO
 
-- Metadata, sitemap, robots, and FAQ schema with live host-derived canonical origin handling: [src/app/layout.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/layout.tsx:1), [src/app/sitemap.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/sitemap.ts:1), [src/app/robots.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/robots.ts:1), [src/lib/request-url.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/lib/request-url.ts:1), [src/components/seo/faq-schema.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/seo/faq-schema.tsx:1)
+- Metadata, sitemap, robots, and FAQ schema with live host-derived canonical origin handling that ignores unroutable bind hosts like `0.0.0.0`: [src/app/layout.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/layout.tsx:1), [src/app/sitemap.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/sitemap.ts:1), [src/app/robots.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/robots.ts:1), [src/lib/request-url.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/lib/request-url.ts:1), [src/components/seo/faq-schema.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/seo/faq-schema.tsx:1)
 
 ## Deployment
 
-- Production Docker image for standalone Next.js output with OpenSSL installed for Prisma runtime compatibility: [Dockerfile](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/Dockerfile:1), [.dockerignore](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/.dockerignore:1)
+- Production Docker image for standalone Next.js output with `npm ci --ignore-scripts`, Prisma generate/build separation, SQLite `/data/app.db` runtime init, full `node_modules` copy for Prisma CLI, and explicit `AUTH_TRUST_HOST` runtime support: [Dockerfile](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/Dockerfile:1), [.dockerignore](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/.dockerignore:1), [prisma/schema.prisma](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/prisma/schema.prisma:1)
 
 ## Intentionally Deferred External-Credential Items
 
 - Live Google OAuth requires `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`. The app still runs because local credentials sign-in is enabled.
+- Public canonical auth URLs in some proxy setups are safest when `AUTH_URL` or `NEXTAUTH_URL` is set to the production `/api/auth` origin. The app still runs without it because local credentials sign-in and direct session access work, but explicit env configuration is recommended for production auth callbacks.
 - Live Stripe checkout and webhooks require Stripe secrets and price IDs. The app still runs because checkout falls back to local mock plan activation.
 - Live email delivery requires Resend credentials. The app still runs because lead capture persists locally and email sending degrades safely.
+- `docker build .` could not be executed end-to-end in this workspace because the Docker daemon socket was not accessible. The Dockerfile itself was updated to match the verified standalone/Prisma deployment contract.

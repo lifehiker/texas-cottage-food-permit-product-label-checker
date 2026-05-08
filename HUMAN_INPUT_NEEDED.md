@@ -42,9 +42,16 @@ Steps:
 ## Production App Settings
 
 - `AUTH_SECRET`
+- `AUTH_URL` or `NEXTAUTH_URL`
 - `NEXT_PUBLIC_APP_URL`
 - `ADMIN_EMAILS`
 - `DATABASE_URL`
 
 Recommended production database:
-- swap the local SQLite default for a managed Postgres database if you want multi-instance persistence.
+- keep SQLite for a single-container deployment, using the baked-in `/data/app.db` path
+- if you later move to multi-instance deployment, you will need an explicit database migration plan because the current app is implemented for SQLite
+
+`AUTH_URL` / `NEXTAUTH_URL` guidance:
+1. Set it to your public auth base, for example `https://your-domain.com/api/auth`.
+2. Keep `NEXT_PUBLIC_APP_URL` aligned with the same public site origin.
+3. This prevents auth callback URLs from depending on internal bind hosts in some reverse-proxy deployments.

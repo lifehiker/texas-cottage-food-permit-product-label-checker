@@ -24,6 +24,7 @@ type FormValues = z.infer<typeof schema>;
 
 export function ProductEligibilityForm() {
   const [result, setResult] = useState<EligibilityResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const {
     register,
@@ -40,11 +41,20 @@ export function ProductEligibilityForm() {
 
   const onSubmit = handleSubmit(async (values) => {
     setSaving(true);
+    setError(null);
     const response = await fetch("/api/checks/eligibility", {
       method: "POST",
       body: JSON.stringify(values),
     });
     const payload = await response.json();
+
+    if (!response.ok) {
+      setResult(null);
+      setError(payload.message || "Eligibility check failed.");
+      setSaving(false);
+      return;
+    }
+
     setResult(payload.result);
     setSaving(false);
   });
@@ -92,7 +102,11 @@ export function ProductEligibilityForm() {
           <Button type="submit">{saving ? "Checking..." : "Check product eligibility"}</Button>
         </form>
       </Card>
-      {result ? (
+      {error ? (
+        <Card className="flex min-h-72 items-center justify-center text-center text-[var(--danger-text)]">
+          {error}
+        </Card>
+      ) : result ? (
         <EligibilityResultCard result={result} />
       ) : (
         <Card className="flex min-h-72 items-center justify-center text-center text-[var(--muted)]">

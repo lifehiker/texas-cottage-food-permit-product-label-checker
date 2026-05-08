@@ -11,9 +11,25 @@ function normalizeAppUrl(value?: string) {
   }
 }
 
+function normalizeOptionalUrl(value?: string) {
+  if (!value) {
+    return undefined;
+  }
+
+  try {
+    const url = new URL(value);
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return undefined;
+  }
+}
+
 const env = {
   appUrl: normalizeAppUrl(
     process.env.NEXT_PUBLIC_APP_URL || process.env.AUTH_URL || process.env.NEXTAUTH_URL,
+  ),
+  authUrl: normalizeOptionalUrl(
+    process.env.AUTH_URL || process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL,
   ),
   authSecret: process.env.AUTH_SECRET || "dev-local-secret-change-me",
   googleClientId: process.env.GOOGLE_CLIENT_ID,

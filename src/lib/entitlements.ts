@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 export type AccessState = {
   canExportPdf: boolean;
   canSave: boolean;
+  hasUnlimitedCheckers: boolean;
   planLabel: string;
   notes: string[];
 };
@@ -12,6 +13,7 @@ export async function getUserAccess(userId?: string | null): Promise<AccessState
     return {
       canExportPdf: false,
       canSave: false,
+      hasUnlimitedCheckers: false,
       planLabel: "Free",
       notes: ["Sign in to save records or unlock paid exports."],
     };
@@ -27,6 +29,7 @@ export async function getUserAccess(userId?: string | null): Promise<AccessState
     return {
       canExportPdf: true,
       canSave: true,
+      hasUnlimitedCheckers: true,
       planLabel: "Texas Seller Pro",
       notes: ["Unlimited saved records and exports are enabled."],
     };
@@ -40,6 +43,7 @@ export async function getUserAccess(userId?: string | null): Promise<AccessState
     return {
       canExportPdf: true,
       canSave: true,
+      hasUnlimitedCheckers: true,
       planLabel: "Label Pack",
       notes: ["You can export for the purchased product window and keep related records."],
     };
@@ -47,8 +51,9 @@ export async function getUserAccess(userId?: string | null): Promise<AccessState
 
   return {
     canExportPdf: false,
-    canSave: true,
+    canSave: false,
+    hasUnlimitedCheckers: false,
     planLabel: "Free",
-    notes: ["Preview is available. PDF export requires Label Pack or Pro."],
+    notes: ["Preview is available. PDF export and saved records require Label Pack or Pro."],
   };
 }

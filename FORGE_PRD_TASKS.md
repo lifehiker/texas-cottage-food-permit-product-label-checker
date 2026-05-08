@@ -1,121 +1,90 @@
 # FORGE PRD Tasks
 
-Status legend: `[ ]` pending, `[~]` in progress, `[x]` complete
+Last updated: 2026-05-08
 
-## Phase 1: Foundation
+Status legend: `[x]` complete, `[-]` in progress, `[ ]` pending
 
-- [x] Read `PRD.md` end-to-end
-- [x] Read `BUILD_INSTRUCTIONS.md` end-to-end
-- [x] Scaffold Next.js 15 app with TypeScript, App Router, Tailwind, ESLint, standalone build config
-- [x] Establish shared design system, layout, navigation, typography, and responsive shell
-- [x] Add core utilities, environment helpers, and safe server/client boundaries
-- [x] Configure local-safe persistence approach and Prisma setup
-- [x] Add seed pipeline for rules/templates/demo data
+## Foundation
 
-## Phase 2: Data Model And Auth
+- [x] Review `PRD.md` and `BUILD_INSTRUCTIONS.md` end-to-end and map requirements to implementation.
+- [x] Confirm Next.js 15 deployment-safe patterns from current installed package behavior and build constraints.
+- [x] Verify project structure, shared UI system, global styling, SEO metadata baseline, and environment guards.
+- [x] Verify Docker/build configuration for standalone Next.js deployment.
 
-- [x] Implement Prisma schema for:
-- [x] `User`
-- [x] `Account`
-- [x] `Session`
-- [x] `VerificationToken`
-- [x] `Product`
-- [x] `EligibilityRule`
-- [x] `EligibilityCheck`
-- [x] `ReadinessChecklist`
-- [x] `LabelTemplate`
-- [x] `SavedLabel`
-- [x] `Subscription`
-- [x] `EmailLead`
-- [x] Create Prisma client singleton and DB access helpers
-- [x] Add auth with NextAuth/Auth.js
-- [x] Add Google OAuth when credentials are present
-- [x] Add safe fallback auth path when Google credentials are absent
-- [x] Protect dashboard/admin routes
-- [x] Implement entitlement helpers for free, one-time, and subscription access
+## Data Model
 
-## Phase 3: Core Workflows
+- [x] Verify Prisma schema covers users, products, eligibility checks, readiness checklists, saved labels, templates, subscriptions, leads, analytics, and admin rules.
+- [x] Verify seed/dev database support for local development and safe fallback operation without external services.
+- [x] Verify data persistence paths used by all authenticated workflows.
 
-- [x] Seed Texas rules and common product categories
-- [x] Build product eligibility rules engine
-- [x] Build `/checker/product-eligibility` UI
-- [x] Persist eligibility checks
-- [x] Show citations, explanation, result status, and next steps
-- [x] Build selling-readiness logic
-- [x] Build `/checker/selling-readiness` UI
-- [x] Persist readiness checklist results
-- [x] Build label generator data model and validation
-- [x] Build `/label-generator` UI
-- [x] Add 3-5 printable label templates
-- [x] Add live label preview
-- [x] Implement PDF export
-- [x] Gate PDF export by entitlements
-- [x] Support saved products and saved labels for authenticated users
+## Auth
 
-## Phase 4: Secondary Workflows And Integrations
+- [x] Verify NextAuth v5 credentials sign-in flow.
+- [x] Verify optional Google OAuth path is guarded when credentials are missing.
+- [x] Fix host/origin trust behavior for production and proxy deployments.
+- [x] Verify protected routes: dashboard, label save, checkout, admin rules.
 
-- [x] Implement Stripe checkout server path
-- [x] Implement Stripe webhook handling
-- [x] Add billing UI with safe fallback when Stripe credentials are absent
-- [x] Implement Resend email server path
-- [x] Add lead capture and email signup persistence
-- [x] Add safe fallback when Resend credentials are absent
-- [x] Build dashboard with:
-- [x] saved products
-- [x] saved labels
-- [x] recent checks
-- [x] billing summary
-- [x] Build admin rules page with protected access
-- [x] Add analytics/event tracking abstraction with no-credential fallback
+## Core User-Facing Pages
 
-## Phase 5: Marketing, SEO, And Content
+- [x] Home landing page `/`
+- [x] Law explainer `/texas-cottage-food-law`
+- [x] Permit/license explainer `/texas-cottage-food-permit`
+- [x] Label template page `/texas-cottage-food-label-template`
+- [x] Farmers market page `/farmers-market-food-label-texas`
+- [x] Product long-tail pages for jam, cookies, brownies
+- [x] FAQ route `/faq/[slug]`
+- [x] Pricing page `/pricing`
+- [x] Login page `/login`
+- [x] Dashboard `/dashboard`
+- [x] Legal/disclaimer pages `/terms`, `/privacy`, `/disclaimer`
 
-- [x] Build landing page `/`
-- [x] Build `/texas-cottage-food-law`
-- [x] Build `/texas-cottage-food-permit`
-- [x] Build `/texas-cottage-food-label-template`
-- [x] Build `/farmers-market-food-label-texas`
-- [x] Build `/can-i-sell-jam-under-texas-cottage-food-law`
-- [x] Build `/can-i-sell-cookies-under-texas-cottage-food-law`
-- [x] Build additional long-tail product page(s) to support PRD
-- [x] Build FAQ route(s)
-- [x] Build pricing/monetization presentation
-- [x] Build legal/trust pages:
-- [x] `/disclaimer`
-- [x] `/privacy`
-- [x] `/terms`
-- [x] Add metadata for each page
-- [x] Add sitemap
-- [x] Add robots
-- [x] Add structured data / FAQ schema where relevant
-- [x] Add internal links and SEO CTAs across content pages
+## Core Workflows
 
-## Phase 6: Deployment And Ops
+- [x] Product eligibility checker UI and API flow.
+- [x] Selling-readiness checklist UI and API flow.
+- [x] Label generator UI with Texas disclosure text, preview, and export gating.
+- [x] Saved products and saved labels workflow for authenticated users.
+- [x] Template library with 3–5 layouts.
+- [x] Rule citations and plain-English “why” explanations throughout outputs.
 
-- [x] Set `output: "standalone"` in Next config
-- [x] Create production-ready `Dockerfile`
-- [x] Add env examples / deployment guidance as needed
-- [x] Ensure build does not depend on network resources
-- [x] Ensure server paths guard missing external credentials cleanly
-- [x] Fix deployment-specific issues from server logs:
-- [x] Auth.js trusted host handling for reverse-proxy deployments
-- [x] Host-aware metadata / sitemap / robots output
-- [x] Prisma/OpenSSL support in the production container
+## API / Server Paths
 
-## Phase 7: Verification
+- [x] Auth route `/api/auth/[...nextauth]`
+- [x] Eligibility API `/api/checks/eligibility`
+- [x] Readiness API `/api/checks/readiness`
+- [x] Label save API `/api/labels/save`
+- [x] Lead capture API `/api/leads`
+- [x] Checkout API `/api/checkout`
+- [x] Stripe webhook API `/api/webhooks/stripe`
+- [x] Admin rules API `/api/admin/rules/[id]`
 
-- [x] Re-read relevant PRD sections after each major phase and update this file
-- [x] Run `npm run build`
-- [x] Fix all build/type/runtime issues
-- [x] Start dev server successfully
-- [x] Start standalone production server successfully
-- [x] Smoke test primary routes
-- [x] Test interactive forms, buttons, and navigation
-- [x] Review UI polish and responsiveness
-- [ ] Test Docker build if Docker is available
-- [x] Create `HUMAN_INPUT_NEEDED.md` for true credential requirements only
-- [x] Create `FORGE_COMPLETION_AUDIT.md` mapping requirements to implementation
-- [x] Output `FORGE_BUILD_COMPLETE` only after all non-external requirements are done
+## Integrations And Safe Fallbacks
 
-Verification note:
-`docker build .` could not be executed in this environment because the Docker daemon socket was not accessible (`permission denied while trying to connect to /var/run/docker.sock`).
+- [x] Stripe checkout and entitlement handling, with graceful fallback when keys are absent.
+- [x] Resend email capture / transactional path, with graceful fallback when key is absent.
+- [x] Analytics/event capture with local-safe persistence.
+- [x] PDF label export path without network dependency at build time.
+
+## Marketing / SEO
+
+- [x] Verify route metadata, sitemap, and robots.
+- [x] Verify keyword-focused copy and CTA flow across core landing pages.
+- [x] Verify FAQ/schema support where implemented.
+
+## Deployment
+
+- [x] Remove fragile patterns that can break across deployments, especially stale server-action posts.
+- [x] Ensure no `next/font/google` or other build-time network fetches are used.
+- [x] Ensure external SDKs are lazy or env-guarded and not initialized unsafely at module scope.
+- [x] Fix Dockerfile COPY/runtime issues and keep only paths that exist.
+- [x] Test `npm run build`.
+- [ ] Test `docker build .` if Docker is available. Blocked in this workspace by Docker daemon permission error on `/var/run/docker.sock`.
+
+## QA And Verification
+
+- [x] Start the dev server successfully.
+- [x] Smoke-test primary routes.
+- [x] Test forms, navigation, save flows, and checkout fallback behavior.
+- [x] Review UI polish and responsive behavior for the main user journeys via rendered HTML structure and live route output in the terminal environment.
+- [x] Create `FORGE_COMPLETION_AUDIT.md` mapping PRD requirements to implementation.
+- [x] Create `HUMAN_INPUT_NEEDED.md` for any true external credential requirements.

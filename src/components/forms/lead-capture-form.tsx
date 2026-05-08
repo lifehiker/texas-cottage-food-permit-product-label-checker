@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,10 +8,15 @@ import { Input } from "@/components/ui/input";
 export function LeadCaptureForm({ source = "site" }: { source?: string }) {
   const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
-  async function submit(formData: FormData) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setState("saving");
+    const formData = new FormData(event.currentTarget);
     const response = await fetch("/api/leads", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         email: formData.get("email"),
         name: formData.get("name"),
@@ -24,7 +29,7 @@ export function LeadCaptureForm({ source = "site" }: { source?: string }) {
 
   return (
     <form
-      action={submit}
+      onSubmit={submit}
       className="grid gap-3 rounded-[28px] border border-[var(--line)] bg-white p-5 shadow-[0_20px_40px_rgba(69,41,18,0.08)] md:grid-cols-[1fr_1fr_auto]"
     >
       <Input name="name" placeholder="Your name" />

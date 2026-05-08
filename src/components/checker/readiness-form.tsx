@@ -24,6 +24,7 @@ type FormValues = {
 
 export function ReadinessForm() {
   const [result, setResult] = useState<ReadinessResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const { register, handleSubmit } = useForm<FormValues>({
     defaultValues: {
@@ -33,11 +34,21 @@ export function ReadinessForm() {
 
   const onSubmit = handleSubmit(async (values) => {
     setSaving(true);
+    setError(null);
     const response = await fetch("/api/checks/readiness", {
       method: "POST",
       body: JSON.stringify(values),
     });
-    setResult(await response.json());
+    const payload = await response.json();
+
+    if (!response.ok) {
+      setResult(null);
+      setError(payload.message || "Readiness checklist failed.");
+      setSaving(false);
+      return;
+    }
+
+    setResult(payload);
     setSaving(false);
   });
 
@@ -79,7 +90,11 @@ export function ReadinessForm() {
           <Button type="submit">{saving ? "Building..." : "Build my readiness checklist"}</Button>
         </form>
       </Card>
-      {result ? (
+      {error ? (
+        <Card className="flex min-h-72 items-center justify-center text-center text-[var(--danger-text)]">
+          {error}
+        </Card>
+      ) : result ? (
         <ReadinessResults summary={result.summary} items={result.items} />
       ) : (
         <Card className="flex min-h-72 items-center justify-center text-center text-[var(--muted)]">

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
-import { auth, signOut } from "@/auth";
+import { auth } from "@/auth";
+import { SignOutButton } from "@/components/auth/sign-out-button";
 import { CheckoutButton } from "@/components/dashboard/checkout-button";
 import { SavedLabelsTable } from "@/components/dashboard/saved-labels-table";
 import { SavedProductsTable } from "@/components/dashboard/saved-products-table";
@@ -50,16 +50,7 @@ export default async function DashboardPage() {
           </h1>
           <p className="mt-2 text-lg text-[var(--muted)]">Current plan: {access.planLabel}</p>
         </div>
-        <form
-          action={async () => {
-            "use server";
-            await signOut({ redirectTo: "/" });
-          }}
-        >
-          <Button type="submit" variant="outline">
-            Sign out
-          </Button>
-        </form>
+        <SignOutButton />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">

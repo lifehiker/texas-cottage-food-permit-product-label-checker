@@ -12,7 +12,18 @@ const schema = z.object({
 });
 
 export async function POST(request: Request) {
-  const payload = schema.parse(await request.json());
+  const parsed = schema.safeParse(await request.json());
+  if (!parsed.success) {
+    return NextResponse.json(
+      {
+        message: "Invalid lead payload.",
+        issues: parsed.error.flatten(),
+      },
+      { status: 400 },
+    );
+  }
+
+  const payload = parsed.data;
 
   await db.emailLead.upsert({
     where: { email: payload.email.toLowerCase() },

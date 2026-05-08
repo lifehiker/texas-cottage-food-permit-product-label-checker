@@ -1,10 +1,13 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { auth } from "@/auth";
 import { trackServerEvent } from "@/lib/analytics";
 import { db } from "@/lib/db";
+import { getUserAccess } from "@/lib/entitlements";
 import { buildReadinessChecklist } from "@/lib/readiness";
+import { getAnonymousUsage, getUserUsage, incrementAnonymousUsage } from "@/lib/usage-limits";
 
 const schema = z.object({
   sellerName: z.string().optional().default("Seller"),
@@ -16,13 +19,41 @@ const schema = z.object({
 
 export async function POST(request: Request) {
   const session = await auth();
-  const payload = schema.parse(await request.json());
+  const access = await getUserAccess(session?.user?.id);
+  const cookieStore = await cookies();
+  const usage = session?.user?.id
+    ? access.hasUnlimitedCheckers
+      ? null
+      : await getUserUsage(session.user.id, "readiness")
+    : getAnonymousUsage(cookieStore, "readiness");
+
+  if (usage && !usage.allowed) {
+    return NextResponse.json(
+      {
+        message: `Free users can generate ${usage.limit} readiness checklist per month. Upgrade to continue.`,
+      },
+      { status: 403 },
+    );
+  }
+
+  const parsed = schema.safeParse(await request.json());
+  if (!parsed.success) {
+    return NextResponse.json(
+      {
+        message: "Invalid readiness payload.",
+        issues: parsed.error.flatten(),
+      },
+      { status: 400 },
+    );
+  }
+
+  const payload = parsed.data;
   await trackServerEvent("checker_started", { type: "readiness" });
   const result = buildReadinessChecklist(payload);
 
   await db.readinessChecklist.create({
     data: {
-      userId: session?.user?.id,
+      userId: access.canSave ? session?.user?.id : null,
       sellerName: payload.sellerName,
       salesChannelsJson: JSON.stringify(payload.salesChannels),
       packagingReady: payload.packagingReady,
@@ -38,5 +69,10 @@ export async function POST(request: Request) {
     incompleteCount: result.items.filter((item) => item.status === "incomplete").length,
   });
 
-  return NextResponse.json(result);
+  const response = NextResponse.json(result);
+  if (!session?.user?.id) {
+    incrementAnonymousUsage(cookieStore, response.cookies, "readiness");
+  }
+
+  return response;
 }

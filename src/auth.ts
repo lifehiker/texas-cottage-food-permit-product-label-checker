@@ -8,6 +8,12 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { env, hasGoogleAuth } from "@/lib/env";
 
+process.env.AUTH_TRUST_HOST ??= "true";
+if (env.authUrl) {
+  process.env.AUTH_URL ??= env.authUrl;
+  process.env.NEXTAUTH_URL ??= env.authUrl;
+}
+
 const credentialsSchema = z.object({
   email: z.string().email(),
   name: z.string().optional(),
