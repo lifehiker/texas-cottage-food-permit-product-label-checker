@@ -12,7 +12,7 @@
 
 ## Auth
 
-- Auth.js / NextAuth setup with local credentials fallback and optional Google OAuth: [src/auth.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/auth.ts:1), [src/app/api/auth/[...nextauth]/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/auth/[...nextauth]/route.ts:1), [src/app/login/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/login/page.tsx:1)
+- Auth.js / NextAuth setup with local credentials fallback, trusted reverse-proxy host handling, and optional Google OAuth: [src/auth.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/auth.ts:1), [src/app/api/auth/[...nextauth]/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/auth/[...nextauth]/route.ts:1), [src/app/login/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/login/page.tsx:1)
 
 ## Core Workflows
 
@@ -24,7 +24,7 @@
 
 ## Billing, Email, And Storage Fallbacks
 
-- Stripe lazy init and guarded checkout/webhook paths: [src/lib/stripe.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/lib/stripe.ts:1), [src/app/api/checkout/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/checkout/route.ts:1), [src/app/api/webhooks/stripe/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/webhooks/stripe/route.ts:1)
+- Stripe lazy init and guarded checkout/webhook paths, including request-host-aware redirects: [src/lib/stripe.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/lib/stripe.ts:1), [src/app/api/checkout/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/checkout/route.ts:1), [src/app/api/webhooks/stripe/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/webhooks/stripe/route.ts:1)
 - Resend lazy init and fallback delivery handling: [src/lib/resend.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/lib/resend.ts:1), [src/app/api/leads/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/leads/route.ts:1)
 - Local SQLite persistence and Prisma client: [src/lib/db.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/lib/db.ts:1), [prisma/dev.db](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/prisma/dev.db:1)
 
@@ -47,11 +47,11 @@
 
 ## SEO
 
-- Metadata, sitemap, robots, and FAQ schema: [src/app/layout.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/layout.tsx:1), [src/app/sitemap.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/sitemap.ts:1), [src/app/robots.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/robots.ts:1), [src/components/seo/faq-schema.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/seo/faq-schema.tsx:1)
+- Metadata, sitemap, robots, and FAQ schema with live host-derived canonical origin handling: [src/app/layout.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/layout.tsx:1), [src/app/sitemap.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/sitemap.ts:1), [src/app/robots.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/robots.ts:1), [src/lib/request-url.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/lib/request-url.ts:1), [src/components/seo/faq-schema.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/seo/faq-schema.tsx:1)
 
 ## Deployment
 
-- Production Docker image for standalone Next.js output: [Dockerfile](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/Dockerfile:1), [.dockerignore](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/.dockerignore:1)
+- Production Docker image for standalone Next.js output with OpenSSL installed for Prisma runtime compatibility: [Dockerfile](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/Dockerfile:1), [.dockerignore](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/.dockerignore:1)
 
 ## Intentionally Deferred External-Credential Items
 

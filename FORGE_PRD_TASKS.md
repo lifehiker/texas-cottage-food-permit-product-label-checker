@@ -97,6 +97,10 @@ Status legend: `[ ]` pending, `[~]` in progress, `[x]` complete
 - [x] Add env examples / deployment guidance as needed
 - [x] Ensure build does not depend on network resources
 - [x] Ensure server paths guard missing external credentials cleanly
+- [x] Fix deployment-specific issues from server logs:
+- [x] Auth.js trusted host handling for reverse-proxy deployments
+- [x] Host-aware metadata / sitemap / robots output
+- [x] Prisma/OpenSSL support in the production container
 
 ## Phase 7: Verification
 
@@ -104,6 +108,7 @@ Status legend: `[ ]` pending, `[~]` in progress, `[x]` complete
 - [x] Run `npm run build`
 - [x] Fix all build/type/runtime issues
 - [x] Start dev server successfully
+- [x] Start standalone production server successfully
 - [x] Smoke test primary routes
 - [x] Test interactive forms, buttons, and navigation
 - [x] Review UI polish and responsiveness
@@ -111,3 +116,6 @@ Status legend: `[ ]` pending, `[~]` in progress, `[x]` complete
 - [x] Create `HUMAN_INPUT_NEEDED.md` for true credential requirements only
 - [x] Create `FORGE_COMPLETION_AUDIT.md` mapping requirements to implementation
 - [x] Output `FORGE_BUILD_COMPLETE` only after all non-external requirements are done
+
+Verification note:
+`docker build .` could not be executed in this environment because the Docker daemon socket was not accessible (`permission denied while trying to connect to /var/run/docker.sock`).

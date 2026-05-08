@@ -1,5 +1,20 @@
+function normalizeAppUrl(value?: string) {
+  if (!value) {
+    return "http://localhost:3000";
+  }
+
+  try {
+    const url = new URL(value);
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return "http://localhost:3000";
+  }
+}
+
 const env = {
-  appUrl: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  appUrl: normalizeAppUrl(
+    process.env.NEXT_PUBLIC_APP_URL || process.env.AUTH_URL || process.env.NEXTAUTH_URL,
+  ),
   authSecret: process.env.AUTH_SECRET || "dev-local-secret-change-me",
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,

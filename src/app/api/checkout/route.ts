@@ -5,7 +5,10 @@ import { auth } from "@/auth";
 import { trackServerEvent } from "@/lib/analytics";
 import { db } from "@/lib/db";
 import { getStripe } from "@/lib/stripe";
-import { env } from "@/lib/env";
+
+function getRequestOrigin(request: Request) {
+  return new URL(request.url).origin;
+}
 
 const schema = z.object({
   planKey: z.enum(["label_pack_29", "seller_pro_monthly_12", "seller_pro_yearly_99"]),
@@ -18,6 +21,7 @@ export async function POST(request: Request) {
   }
 
   const { planKey } = schema.parse(await request.json());
+  const origin = getRequestOrigin(request);
   await trackServerEvent("checkout_started", {
     userId: session.user.id,
     planKey,
@@ -41,7 +45,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       mode: "mock",
-      redirectUrl: `${env.appUrl}/dashboard?purchase=mock-success`,
+      redirectUrl: `${origin}/dashboard?purchase=mock-success`,
     });
   }
 
@@ -60,8 +64,8 @@ export async function POST(request: Request) {
     mode: planKey === "label_pack_29" ? "payment" : "subscription",
     customer_email: session.user.email,
     line_items: [{ price, quantity: 1 }],
-    success_url: `${env.appUrl}/dashboard?purchase=success`,
-    cancel_url: `${env.appUrl}/pricing?purchase=cancelled`,
+    success_url: `${origin}/dashboard?purchase=success`,
+    cancel_url: `${origin}/pricing?purchase=cancelled`,
     metadata: {
       userId: session.user.id,
       planKey,

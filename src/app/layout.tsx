@@ -1,19 +1,25 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 
 import "./globals.css";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { getOriginFromHeaders } from "@/lib/request-url";
 
-export const metadata: Metadata = {
-  metadataBase: new URL("http://localhost:3000"),
-  title: {
-    default: "Texas Cottage Food Checker",
-    template: "%s | Texas Cottage Food Checker",
-  },
-  description:
-    "Get a plain-English answer on Texas cottage food rules, label requirements, and selling steps. Use the free Texas Cottage Food Checker and label generator.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const headerStore = await headers();
+
+  return {
+    metadataBase: new URL(getOriginFromHeaders(headerStore)),
+    title: {
+      default: "Texas Cottage Food Checker",
+      template: "%s | Texas Cottage Food Checker",
+    },
+    description:
+      "Get a plain-English answer on Texas cottage food rules, label requirements, and selling steps. Use the free Texas Cottage Food Checker and label generator.",
+  };
+}
 
 export default function RootLayout({
   children,

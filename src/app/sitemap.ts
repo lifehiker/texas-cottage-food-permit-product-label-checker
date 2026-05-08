@@ -1,7 +1,10 @@
 import type { MetadataRoute } from "next";
+import { headers } from "next/headers";
 
-import { env } from "@/lib/env";
 import { faqEntries } from "@/data/texasRules";
+import { getOriginFromHeaders } from "@/lib/request-url";
+
+export const dynamic = "force-dynamic";
 
 const staticRoutes = [
   "",
@@ -21,14 +24,16 @@ const staticRoutes = [
   "/terms",
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const origin = getOriginFromHeaders(await headers());
+
   return [
     ...staticRoutes.map((route) => ({
-      url: `${env.appUrl}${route}`,
+      url: `${origin}${route}`,
       lastModified: new Date(),
     })),
     ...faqEntries.map((entry) => ({
-      url: `${env.appUrl}/faq/${entry.slug}`,
+      url: `${origin}/faq/${entry.slug}`,
       lastModified: new Date(),
     })),
   ];

@@ -1,13 +1,18 @@
 import type { MetadataRoute } from "next";
+import { headers } from "next/headers";
 
-import { env } from "@/lib/env";
+import { getOriginFromHeaders } from "@/lib/request-url";
 
-export default function robots(): MetadataRoute.Robots {
+export const dynamic = "force-dynamic";
+
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const origin = getOriginFromHeaders(await headers());
+
   return {
     rules: {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: `${env.appUrl}/sitemap.xml`,
+    sitemap: `${origin}/sitemap.xml`,
   };
 }
