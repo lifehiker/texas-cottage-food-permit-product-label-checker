@@ -52,7 +52,7 @@
 
 ## Deployment
 
-- Production Docker image for standalone Next.js output with `npm ci --ignore-scripts`, Prisma generate/build separation, SQLite `/data/app.db` runtime init, full `node_modules` copy for Prisma CLI, explicit `AUTH_TRUST_HOST` runtime support, and `NEXTAUTH_URL_INTERNAL` loopback auth requests for containerized deployments: [Dockerfile](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/Dockerfile:1), [.dockerignore](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/.dockerignore:1), [prisma/schema.prisma](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/prisma/schema.prisma:1), [.env.example](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/.env.example:1)
+- Production Docker image for standalone Next.js output with `npm ci --ignore-scripts`, Prisma generate/build separation, SQLite `/data/app.db` runtime init, full `node_modules` copy for Prisma CLI, explicit `AUTH_TRUST_HOST` runtime support, `NEXTAUTH_URL_INTERNAL` loopback auth requests for containerized deployments, and a startup path that now matches standalone mode in both Docker and `npm start`: [Dockerfile](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/Dockerfile:1), [package.json](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/package.json:1), [.dockerignore](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/.dockerignore:1), [prisma/schema.prisma](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/prisma/schema.prisma:1), [.env.example](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/.env.example:1)
 
 ## UI Polish
 

@@ -1,6 +1,6 @@
 # FORGE PRD Tasks
 
-Last updated: 2026-05-08 (post-deployment-fix verification)
+Last updated: 2026-05-08 (standalone deployment verification)
 
 Status legend: `[x]` complete, `[-]` in progress, `[ ]` pending
 
@@ -10,6 +10,7 @@ Status legend: `[x]` complete, `[-]` in progress, `[ ]` pending
 - [x] Confirm Next.js 15 deployment-safe patterns from current installed package behavior and build constraints.
 - [x] Verify project structure, shared UI system, global styling, SEO metadata baseline, and environment guards.
 - [x] Verify Docker/build configuration for standalone Next.js deployment.
+- [x] Align the package start command with Next.js standalone output so `npm start` matches production runtime behavior.
 
 ## Data Model
 
@@ -77,6 +78,7 @@ Status legend: `[x]` complete, `[-]` in progress, `[ ]` pending
 - [x] Ensure no `next/font/google` or other build-time network fetches are used.
 - [x] Ensure external SDKs are lazy or env-guarded and not initialized unsafely at module scope.
 - [x] Fix Dockerfile COPY/runtime issues and keep only paths that exist.
+- [x] Fix the standalone runtime contract for both `npm start` and Docker `CMD`.
 - [x] Test `npm run build`.
 - [ ] Test `docker build .` if Docker is available. Blocked in this workspace by Docker daemon permission error on `/var/run/docker.sock`.
 
