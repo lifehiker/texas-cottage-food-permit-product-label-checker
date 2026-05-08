@@ -1,36 +1,48 @@
-function normalizeAppUrl(value?: string) {
+function normalizeOriginUrl(value?: string) {
   if (!value) {
     return "http://localhost:3000";
   }
 
   try {
     const url = new URL(value);
-    return url.toString().replace(/\/$/, "");
+    return url.origin;
   } catch {
     return "http://localhost:3000";
   }
 }
 
-function normalizeOptionalUrl(value?: string) {
+function normalizeAuthUrl(value?: string) {
   if (!value) {
     return undefined;
   }
 
   try {
     const url = new URL(value);
+    if (url.pathname === "/" || !url.pathname) {
+      url.pathname = "/api/auth";
+    }
+
     return url.toString().replace(/\/$/, "");
   } catch {
     return undefined;
   }
+}
+
+function defaultInternalAuthUrl() {
+  const port = process.env.PORT || "3000";
+  return `http://127.0.0.1:${port}/api/auth`;
 }
 
 const env = {
-  appUrl: normalizeAppUrl(
+  appUrl: normalizeOriginUrl(
     process.env.NEXT_PUBLIC_APP_URL || process.env.AUTH_URL || process.env.NEXTAUTH_URL,
   ),
-  authUrl: normalizeOptionalUrl(
+  authUrl: normalizeAuthUrl(
     process.env.AUTH_URL || process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL,
   ),
+  internalAuthUrl:
+    normalizeAuthUrl(process.env.AUTH_INTERNAL_URL || process.env.NEXTAUTH_URL_INTERNAL) ||
+    defaultInternalAuthUrl(),
   authSecret: process.env.AUTH_SECRET || "dev-local-secret-change-me",
   googleClientId: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,

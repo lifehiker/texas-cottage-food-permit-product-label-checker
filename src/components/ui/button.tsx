@@ -13,15 +13,25 @@ const styles = {
   outline: "border border-[var(--line)] bg-white text-[var(--ink)] hover:bg-[var(--sand)]",
 };
 
+export function buttonClassName({
+  className,
+  variant = "primary",
+}: {
+  className?: string;
+  variant?: ButtonProps["variant"];
+}) {
+  return cn(
+    "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-60",
+    styles[variant],
+    className,
+  );
+}
+
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "primary", ...props }, ref) => (
     <button
       ref={ref}
-      className={cn(
-        "inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-60",
-        styles[variant],
-        className,
-      )}
+      className={buttonClassName({ className, variant })}
       {...props}
     />
   ),

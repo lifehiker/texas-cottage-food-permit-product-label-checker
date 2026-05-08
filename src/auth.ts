@@ -13,6 +13,7 @@ if (env.authUrl) {
   process.env.AUTH_URL ??= env.authUrl;
   process.env.NEXTAUTH_URL ??= env.authUrl;
 }
+process.env.NEXTAUTH_URL_INTERNAL ??= env.internalAuthUrl;
 
 const credentialsSchema = z.object({
   email: z.string().email(),

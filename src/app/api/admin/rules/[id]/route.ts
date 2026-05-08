@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
@@ -36,5 +35,5 @@ export async function POST(
     },
   });
 
-  redirect("/admin/rules?updated=1");
+  return NextResponse.redirect(new URL("/admin/rules?updated=1", request.url));
 }

@@ -25,6 +25,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 ENV AUTH_TRUST_HOST=true
+ENV NEXTAUTH_URL_INTERNAL=http://127.0.0.1:3000/api/auth
 ENV AUTH_SECRET="forge-app-default-secret-override-in-production"
 ENV DATABASE_URL="file:/data/app.db"
 RUN addgroup --system --gid 1001 nodejs \

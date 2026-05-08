@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { navLinks } from "@/data/siteContent";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonClassName } from "@/components/ui/button";
 
 export function SiteHeader() {
   return (
@@ -28,10 +28,11 @@ export function SiteHeader() {
         </nav>
         <div className="flex items-center gap-3">
           <Badge className="hidden sm:inline-flex">Texas only</Badge>
-          <Link href="/dashboard">
-            <Button variant="outline" className="px-4 py-2.5">
-              Dashboard
-            </Button>
+          <Link
+            href="/dashboard"
+            className={buttonClassName({ variant: "outline", className: "px-4 py-2.5" })}
+          >
+            Dashboard
           </Link>
         </div>
       </div>

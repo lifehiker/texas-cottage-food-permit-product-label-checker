@@ -13,7 +13,7 @@
 
 ## Auth
 
-- Auth.js / NextAuth setup with local credentials fallback, trusted reverse-proxy host handling, and optional Google OAuth: [src/auth.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/auth.ts:1), [src/app/api/auth/[...nextauth]/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/auth/[...nextauth]/route.ts:1), [src/app/login/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/login/page.tsx:1), [src/components/auth/login-form.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/auth/login-form.tsx:1), [src/components/auth/sign-out-button.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/auth/sign-out-button.tsx:1), [src/app/api/session/login/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/session/login/route.ts:1), [src/app/api/session/logout/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/session/logout/route.ts:1)
+- Auth.js / NextAuth setup with local credentials fallback, trusted reverse-proxy host handling, normalized public `/api/auth` URLs, and internal loopback auth URL support for containerized runtime requests: [src/auth.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/auth.ts:1), [src/lib/env.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/lib/env.ts:1), [src/app/api/auth/[...nextauth]/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/auth/[...nextauth]/route.ts:1), [src/app/login/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/login/page.tsx:1), [src/components/auth/login-form.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/auth/login-form.tsx:1), [src/components/auth/sign-out-button.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/auth/sign-out-button.tsx:1), [src/app/api/session/login/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/session/login/route.ts:1), [src/app/api/session/logout/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/session/logout/route.ts:1)
 
 ## Core Workflows
 
@@ -44,7 +44,7 @@
 
 ## Admin
 
-- Protected rules viewer with admin-email guard and route-based updates that avoid server-action deployment drift: [src/app/admin/rules/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/admin/rules/page.tsx:1), [src/app/api/admin/rules/[id]/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/admin/rules/[id]/route.ts:1)
+- Protected rules viewer with admin-email guard and route-based updates that avoid server-action deployment drift and use route-handler redirects instead of App Router redirect throws: [src/app/admin/rules/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/admin/rules/page.tsx:1), [src/app/api/admin/rules/[id]/route.ts](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/api/admin/rules/[id]/route.ts:1)
 
 ## SEO
 
@@ -52,12 +52,16 @@
 
 ## Deployment
 
-- Production Docker image for standalone Next.js output with `npm ci --ignore-scripts`, Prisma generate/build separation, SQLite `/data/app.db` runtime init, full `node_modules` copy for Prisma CLI, and explicit `AUTH_TRUST_HOST` runtime support: [Dockerfile](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/Dockerfile:1), [.dockerignore](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/.dockerignore:1), [prisma/schema.prisma](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/prisma/schema.prisma:1)
+- Production Docker image for standalone Next.js output with `npm ci --ignore-scripts`, Prisma generate/build separation, SQLite `/data/app.db` runtime init, full `node_modules` copy for Prisma CLI, explicit `AUTH_TRUST_HOST` runtime support, and `NEXTAUTH_URL_INTERNAL` loopback auth requests for containerized deployments: [Dockerfile](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/Dockerfile:1), [.dockerignore](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/.dockerignore:1), [prisma/schema.prisma](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/prisma/schema.prisma:1), [.env.example](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/.env.example:1)
+
+## UI Polish
+
+- Primary CTA links now reuse button styling without invalid nested interactive elements, which keeps the marketing and dashboard routes browser-safe while preserving the existing visual language: [src/components/ui/button.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/ui/button.tsx:1), [src/components/layout/site-header.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/components/layout/site-header.tsx:1), [src/app/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/page.tsx:1), [src/app/dashboard/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/dashboard/page.tsx:1), [src/app/texas-cottage-food-law/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/texas-cottage-food-law/page.tsx:1), [src/app/texas-cottage-food-label-template/page.tsx](/opt/forge-builds/texas-cottage-food-permit-product-label-checker/src/app/texas-cottage-food-label-template/page.tsx:1)
 
 ## Intentionally Deferred External-Credential Items
 
 - Live Google OAuth requires `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`. The app still runs because local credentials sign-in is enabled.
-- Public canonical auth URLs in some proxy setups are safest when `AUTH_URL` or `NEXTAUTH_URL` is set to the production `/api/auth` origin. The app still runs without it because local credentials sign-in and direct session access work, but explicit env configuration is recommended for production auth callbacks.
+- Public canonical auth URLs in some proxy setups are safest when `AUTH_URL` or `NEXTAUTH_URL` is set to the production `/api/auth` origin. The app still runs without it because local credentials sign-in and internal loopback auth requests work, but explicit env configuration is recommended for production auth callbacks.
 - Live Stripe checkout and webhooks require Stripe secrets and price IDs. The app still runs because checkout falls back to local mock plan activation.
 - Live email delivery requires Resend credentials. The app still runs because lead capture persists locally and email sending degrades safely.
 - `docker build .` could not be executed end-to-end in this workspace because the Docker daemon socket was not accessible. The Dockerfile itself was updated to match the verified standalone/Prisma deployment contract.

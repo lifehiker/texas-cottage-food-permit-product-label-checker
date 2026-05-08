@@ -6,7 +6,7 @@ import { CheckoutButton } from "@/components/dashboard/checkout-button";
 import { SavedLabelsTable } from "@/components/dashboard/saved-labels-table";
 import { SavedProductsTable } from "@/components/dashboard/saved-products-table";
 import { Section } from "@/components/layout/section";
-import { Button } from "@/components/ui/button";
+import { buttonClassName } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import { getUserAccess } from "@/lib/entitlements";
@@ -20,11 +20,11 @@ export default async function DashboardPage() {
           <h1 className="text-3xl font-black">Sign in to save products and labels</h1>
           <p className="text-[var(--muted)]">Use local email sign-in if Google OAuth is not configured yet.</p>
           <div className="flex justify-center gap-3">
-            <Link href="/login">
-              <Button>Sign in</Button>
+            <Link href="/login" className={buttonClassName({})}>
+              Sign in
             </Link>
-            <Link href="/pricing">
-              <Button variant="outline">See plans</Button>
+            <Link href="/pricing" className={buttonClassName({ variant: "outline" })}>
+              See plans
             </Link>
           </div>
         </Card>

@@ -1,6 +1,6 @@
 # FORGE PRD Tasks
 
-Last updated: 2026-05-08
+Last updated: 2026-05-08 (post-deployment-fix verification)
 
 Status legend: `[x]` complete, `[-]` in progress, `[ ]` pending
 
@@ -21,7 +21,7 @@ Status legend: `[x]` complete, `[-]` in progress, `[ ]` pending
 
 - [x] Verify NextAuth v5 credentials sign-in flow.
 - [x] Verify optional Google OAuth path is guarded when credentials are missing.
-- [x] Fix host/origin trust behavior for production and proxy deployments.
+- [x] Fix host/origin trust behavior for production and proxy deployments, including internal auth base URL handling for containerized runtime requests.
 - [x] Verify protected routes: dashboard, label save, checkout, admin rules.
 
 ## Core User-Facing Pages
@@ -73,7 +73,7 @@ Status legend: `[x]` complete, `[-]` in progress, `[ ]` pending
 
 ## Deployment
 
-- [x] Remove fragile patterns that can break across deployments, especially stale server-action posts.
+- [x] Remove fragile patterns that can break across deployments, especially stale server-action posts and route-handler redirects tied to previous builds.
 - [x] Ensure no `next/font/google` or other build-time network fetches are used.
 - [x] Ensure external SDKs are lazy or env-guarded and not initialized unsafely at module scope.
 - [x] Fix Dockerfile COPY/runtime issues and keep only paths that exist.
@@ -83,8 +83,9 @@ Status legend: `[x]` complete, `[-]` in progress, `[ ]` pending
 ## QA And Verification
 
 - [x] Start the dev server successfully.
+- [x] Start the standalone production server successfully.
 - [x] Smoke-test primary routes.
 - [x] Test forms, navigation, save flows, and checkout fallback behavior.
-- [x] Review UI polish and responsive behavior for the main user journeys via rendered HTML structure and live route output in the terminal environment.
+- [x] Review UI polish and responsive behavior for the main user journeys via rendered HTML structure and live route output in the terminal environment, including cleanup of invalid nested interactive CTA markup.
 - [x] Create `FORGE_COMPLETION_AUDIT.md` mapping PRD requirements to implementation.
 - [x] Create `HUMAN_INPUT_NEEDED.md` for any true external credential requirements.

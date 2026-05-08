@@ -43,6 +43,7 @@ Steps:
 
 - `AUTH_SECRET`
 - `AUTH_URL` or `NEXTAUTH_URL`
+- `AUTH_INTERNAL_URL` or `NEXTAUTH_URL_INTERNAL` (optional but recommended for containerized proxy deployments)
 - `NEXT_PUBLIC_APP_URL`
 - `ADMIN_EMAILS`
 - `DATABASE_URL`
@@ -54,4 +55,5 @@ Recommended production database:
 `AUTH_URL` / `NEXTAUTH_URL` guidance:
 1. Set it to your public auth base, for example `https://your-domain.com/api/auth`.
 2. Keep `NEXT_PUBLIC_APP_URL` aligned with the same public site origin.
-3. This prevents auth callback URLs from depending on internal bind hosts in some reverse-proxy deployments.
+3. For Docker or reverse-proxy deployments, set `AUTH_INTERNAL_URL` to the container loopback auth base, for example `http://127.0.0.1:3000/api/auth`, if your platform does not already provide a safe internal auth URL.
+4. This prevents auth callback URLs from depending on internal bind hosts in some reverse-proxy deployments.

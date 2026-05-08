@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Section } from "@/components/layout/section";
-import { Button } from "@/components/ui/button";
+import { buttonClassName } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { labelChecklistPdfBullets } from "@/data/siteContent";
 
@@ -29,8 +29,8 @@ export default function TexasLabelTemplatePage() {
           <p className="text-sm leading-7 text-[var(--muted)]">
             Use one of the built-in layouts and preview all required text before exporting.
           </p>
-          <Link href="/label-generator">
-            <Button className="w-full">Open label generator</Button>
+          <Link href="/label-generator" className={buttonClassName({ className: "w-full" })}>
+            Open label generator
           </Link>
         </Card>
       </div>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Section } from "@/components/layout/section";
-import { Button } from "@/components/ui/button";
+import { buttonClassName } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TEXAS_DSHS_COTTAGE_FOOD_URL } from "@/data/texasRules";
 
@@ -38,11 +38,14 @@ export default function TexasLawPage() {
           <p className="text-sm leading-7 text-[var(--muted)]">
             Use the checker for a product-specific result, then build the matching label and market checklist.
           </p>
-          <Link href="/checker/product-eligibility">
-            <Button className="w-full">Check my product</Button>
+          <Link href="/checker/product-eligibility" className={buttonClassName({ className: "w-full" })}>
+            Check my product
           </Link>
-          <Link href="/label-generator">
-            <Button variant="outline" className="w-full">Build my label</Button>
+          <Link
+            href="/label-generator"
+            className={buttonClassName({ variant: "outline", className: "w-full" })}
+          >
+            Build my label
           </Link>
         </Card>
       </div>

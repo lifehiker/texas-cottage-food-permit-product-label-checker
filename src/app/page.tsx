@@ -4,7 +4,7 @@ import { LeadCaptureForm } from "@/components/forms/lead-capture-form";
 import { Section } from "@/components/layout/section";
 import { FaqSchema } from "@/components/seo/faq-schema";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonClassName } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { citationLinks, faqSchemaData, homeHighlights, trustStats } from "@/data/siteContent";
 
@@ -23,11 +23,11 @@ export default function HomePage() {
               Built for Texas home bakers, jam makers, candy sellers, and first-time market vendors who need a practical compliance answer before launch day.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link href="/checker/product-eligibility">
-                <Button>Start the free checker</Button>
+              <Link href="/checker/product-eligibility" className={buttonClassName({})}>
+                Start the free checker
               </Link>
-              <Link href="/label-generator">
-                <Button variant="outline">Open label generator</Button>
+              <Link href="/label-generator" className={buttonClassName({ variant: "outline" })}>
+                Open label generator
               </Link>
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
