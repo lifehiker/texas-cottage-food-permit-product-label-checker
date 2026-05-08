@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String               @id @default(cuid())
+  name           String?
+  email          String?              @unique
+  emailVerified  DateTime?
+  image          String?
+  role           String               @default("user")
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  accounts       Account[]
+  sessions       Session[]
+  products       Product[]
+  checks         EligibilityCheck[]
+  checklists     ReadinessChecklist[]
+  savedLabels    SavedLabel[]
+  subscriptions  Subscription[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([sessionToken])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model Product {
+  id              String    @id @default(cuid())
+  userId          String?
+  name            String
+  category        String
+  ingredientsJson String
+  shelfStable     Boolean
+  resultStatus    String
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  labels          SavedLabel[]
+}
+
+model EligibilityRule {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  category       String
+  conditionsJson String
+  outcome        String
+  explanationMd  String
+  sourceUrl      String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model EligibilityCheck {
+  id                  String   @id @default(cuid())
+  userId              String?
+  sellerName          String?
+  productCategory     String
+  ingredientsJson     String
+  shelfStable         Boolean
+  needsRefrigeration  Boolean
+  salesChannel        String
+  resultStatus        String
+  resultTitle         String
+  resultExplanation   String
+  nextStepsJson       String
+  citationsJson       String
+  createdAt           DateTime @default(now())
+  user                User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model ReadinessChecklist {
+  id                    String   @id @default(cuid())
+  userId                String?
+  sellerName            String
+  salesChannelsJson     String
+  packagingReady        Boolean
+  labelReady            Boolean
+  marketIntent          Boolean
+  checklistItemsJson    String
+  summary               String
+  createdAt             DateTime @default(now())
+  user                  User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model LabelTemplate {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  name        String
+  description String
+  layoutJson  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SavedLabel {
+  id          String   @id @default(cuid())
+  userId      String?
+  productId   String?
+  templateKey String
+  labelJson   String
+  pdfUrl      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+}
+
+model Subscription {
+  id                String   @id @default(cuid())
+  userId            String
+  status            String
+  planKey           String
+  stripeCustomerId  String?
+  stripeSessionId   String?
+  stripePriceId     String?
+  currentPeriodEnd  DateTime?
+  exportProductId   String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model EmailLead {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  source      String
+  status      String   @default("captured")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AnalyticsEvent {
+  id          String   @id @default(cuid())
+  eventName   String
+  payloadJson String?
+  createdAt   DateTime @default(now())
+}
