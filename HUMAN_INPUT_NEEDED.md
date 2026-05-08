@@ -1,59 +1,45 @@
-# HUMAN INPUT NEEDED
+# HUMAN INPUT Needed
 
-The app runs locally without third-party credentials by using:
-- local email sign-in instead of Google OAuth
-- mock checkout activation instead of live Stripe
-- local lead capture persistence instead of live Resend delivery
+The app runs locally and in fallback mode without external credentials. Provide the following only if you want live production integrations instead of safe fallback behavior.
 
-For production-grade external integrations, provide:
+## Required for production security
 
-## Google OAuth
+- `AUTH_SECRET`
+  - Generate a long random secret and set it in the deployment environment.
+  - This should replace the Dockerfile placeholder value.
+
+- `NEXT_PUBLIC_APP_URL`
+  - Set this to the public base URL of the deployed app, for example `https://your-domain.com`.
+
+## Optional live auth
 
 - `GOOGLE_CLIENT_ID`
 - `GOOGLE_CLIENT_SECRET`
+  - Needed only if you want Google OAuth sign-in.
+  - Without these, the app still supports the built-in email credentials sign-in flow.
 
-Steps:
-1. Create an OAuth client in Google Cloud Console.
-2. Add the production callback URL: `/api/auth/callback/google`
-3. Set both env vars in the deployment environment.
-
-## Stripe
+## Optional live payments
 
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
 - `STRIPE_PRICE_LABEL_PACK`
 - `STRIPE_PRICE_PRO_MONTHLY`
 - `STRIPE_PRICE_PRO_YEARLY`
+  - Needed only for real Stripe checkout and webhook fulfillment.
+  - Without these, checkout uses the app's mock success fallback so the product remains testable.
 
-Steps:
-1. Create one-time and subscription products in Stripe.
-2. Copy each Price ID into the matching env var.
-3. Configure the webhook endpoint `/api/webhooks/stripe`.
-
-## Resend
+## Optional live email delivery
 
 - `RESEND_API_KEY`
 - `RESEND_FROM`
+  - Needed only for real transactional email sending.
+  - Without these, lead capture still works and email send attempts fall back safely.
 
-Steps:
-1. Create and verify a sender domain in Resend.
-2. Set the API key and verified sender address.
+## Optional admin access
 
-## Production App Settings
-
-- `AUTH_SECRET`
-- `AUTH_URL` or `NEXTAUTH_URL`
-- `AUTH_INTERNAL_URL` or `NEXTAUTH_URL_INTERNAL` (optional but recommended for containerized proxy deployments)
-- `NEXT_PUBLIC_APP_URL`
 - `ADMIN_EMAILS`
-- `DATABASE_URL`
+  - Comma-separated list of email addresses allowed to access `/admin/rules`.
 
-Recommended production database:
-- keep SQLite for a single-container deployment, using the baked-in `/data/app.db` path
-- if you later move to multi-instance deployment, you will need an explicit database migration plan because the current app is implemented for SQLite
+## Environment note
 
-`AUTH_URL` / `NEXTAUTH_URL` guidance:
-1. Set it to your public auth base, for example `https://your-domain.com/api/auth`.
-2. Keep `NEXT_PUBLIC_APP_URL` aligned with the same public site origin.
-3. For Docker or reverse-proxy deployments, set `AUTH_INTERNAL_URL` to the container loopback auth base, for example `http://127.0.0.1:3000/api/auth`, if your platform does not already provide a safe internal auth URL.
-4. This prevents auth callback URLs from depending on internal bind hosts in some reverse-proxy deployments.
+- Docker is installed in this environment, but `docker build .` could not be executed here because access to `/var/run/docker.sock` is denied. No additional app credential is needed for that; it is a machine permission issue.

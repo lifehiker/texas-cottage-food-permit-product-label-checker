@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Section } from "@/components/layout/section";
+import { buttonClassName } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 export const metadata: Metadata = {
@@ -26,7 +28,25 @@ export default function TexasPermitPage() {
             <li>Food handler training is still part of the operator requirements.</li>
             <li>TCS foods and vendor/wholesale structures can trigger registration and extra labeling rules.</li>
           </ul>
+          <p>
+            If you want the fuller explanation, read the{" "}
+            <Link href="/texas-cottage-food-permit-vs-license" className="underline">
+              Texas cottage food permit vs license breakdown
+            </Link>
+            .
+          </p>
         </Card>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Link href="/texas-cottage-food-permit-vs-license" className={buttonClassName({ className: "w-full" })}>
+            Read permit vs license guide
+          </Link>
+          <Link
+            href="/checker/selling-readiness"
+            className={buttonClassName({ variant: "outline", className: "w-full" })}
+          >
+            Start readiness checklist
+          </Link>
+        </div>
       </div>
     </Section>
   );
