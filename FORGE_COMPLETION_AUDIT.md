@@ -1,6 +1,6 @@
 # FORGE Completion Audit
 
-Last updated: 2026-05-08
+Last updated: 2026-05-09
 
 This audit maps the major PRD requirements to concrete implementation files, routes, and behaviors.
 
@@ -12,6 +12,7 @@ This audit maps the major PRD requirements to concrete implementation files, rou
 
 - Production Docker runtime with Prisma schema sync on startup
   - `Dockerfile`
+  - Includes standalone output, `.next/static`, `public/`, Prisma files, and runtime DB push on container start
 
 - Prisma schema and seed data
   - `prisma/schema.prisma`
@@ -174,6 +175,9 @@ This audit maps the major PRD requirements to concrete implementation files, rou
   - `src/components/seo/faq-schema.tsx`
   - `src/data/siteContent.ts`
 
+- Responsive header navigation for mobile and desktop
+  - `src/components/layout/site-header.tsx`
+
 ## Safe fallbacks for unavailable external services
 
 - No Google OAuth credentials
@@ -202,6 +206,7 @@ This audit maps the major PRD requirements to concrete implementation files, rou
 
 - Dev server smoke test
   - `npm run dev` started successfully
+  - Verified it serves correctly on `http://127.0.0.1:3000`
   - Verified `200` responses for primary routes:
     - `/`
     - `/texas-cottage-food-law`
@@ -214,12 +219,21 @@ This audit maps the major PRD requirements to concrete implementation files, rou
     - `/pricing`
     - `/dashboard`
     - long-tail and FAQ routes
+    - confirmed FAQ slug: `/faq/do-i-need-a-food-handler-card-for-texas-cottage-food-sales`
 
 - Interactive API smoke tests
   - Eligibility API returned an allowed result for a cookie test payload
   - Readiness API returned checklist items and summary for a market test payload
   - Leads API returned `{"ok":true}`
   - Save-label and checkout endpoints correctly returned `401` when unauthenticated
+  - Credentials login created a valid session cookie
+  - Mock checkout returned a dashboard redirect for an authenticated user when Stripe keys were absent
+  - Save-label succeeded for an authenticated user with mocked paid access
+
+- Production server smoke test
+  - `npm run start` launched successfully from `.next/standalone/server.js`
+  - Verified `200` on `/`
+  - Verified production API responses for eligibility, lead capture, login, mock checkout, and label save
 
 ## Intentionally deferred external-credential items
 
