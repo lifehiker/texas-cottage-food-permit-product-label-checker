@@ -9,6 +9,7 @@ This audit maps the major PRD requirements to concrete implementation files, rou
 - Standalone Next.js output
   - `next.config.ts`
   - `package.json`
+  - `package.json` `start` script now changes into `.next/standalone` before running `server.js`, which is required for this Next 15 build to resolve `.next/server/middleware-manifest.json` correctly during production startup outside Docker
 
 - Production Docker runtime with Prisma schema sync on startup
   - `Dockerfile`
@@ -236,11 +237,12 @@ This audit maps the major PRD requirements to concrete implementation files, rou
   - Save-label succeeded for an authenticated user with mocked paid access
 
 - Production server smoke test
-  - `npm run start` launched successfully from `.next/standalone/server.js`
+  - `npm run start` launched successfully from inside `.next/standalone/server.js`
   - Verified `200` on `/`
   - Verified `200` on `/checker/product-eligibility`, `/checker/selling-readiness`, `/label-generator`, and `/dashboard`
   - Re-verified on a fresh process using `PORT=3002 npm run start`
   - Verified production API responses for eligibility, lead capture, login, mock checkout, and label save
+  - Root cause fixed: starting the standalone server from the repo root caused `MODULE_NOT_FOUND` for `.next/standalone/.next/server/middleware-manifest.json` and `500` responses on all routes under Next 15
 
 ## Intentionally deferred external-credential items
 

@@ -72,10 +72,12 @@
 - [x] `next.config.ts` already uses `output: "standalone"`.
 - [x] Verify Dockerfile matches actual repo contents and Prisma/SQLite runtime needs.
   Dockerfile now copies only the Prisma runtime pieces needed alongside Next standalone output, removes the build-time `.env` from the runner image, and runs `prisma db push` against `/app/prisma/schema.prisma` before boot.
+- [x] Verify standalone production startup path works outside Docker too.
+  Fixed `package.json` so `npm run start` launches from inside `.next/standalone`; with Next 15, running `node .next/standalone/server.js` from the repo root produced `MODULE_NOT_FOUND` errors for `.next/server/middleware-manifest.json` and returned `500` on every route.
 - [ ] Verify `docker build .` when Docker is available.
   Docker is installed but the daemon is not accessible in this environment: `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`.
 - [x] Verify startup path initializes Prisma DB successfully in container/runtime.
-  Clean production rebuild confirmed `.next/standalone/server.js` exists, and `npm run start` serves successfully from standalone output.
+  Clean production rebuild confirmed `.next/standalone/server.js` exists, and `npm run start` now serves successfully from standalone output with working page and API responses.
 
 ## Verification / QA
 - [x] Run `npm run build` and fix all build errors.
@@ -84,6 +86,8 @@
 - [x] Start the production standalone server and verify it stays up.
 - [x] Smoke test primary routes.
 - [x] Test interactive forms, buttons, navigation, auth, and guarded paid flows.
+- [x] Re-test production APIs after the standalone launch fix.
+  Confirmed successful responses for eligibility, readiness, leads, credentials login, label save, and mock checkout on the standalone production server after correcting the start script.
 - [x] Review UI quality and fix rough edges.
   Mobile header navigation now stays usable on small screens via a horizontal nav chip row in `src/components/layout/site-header.tsx`.
 - [x] Run lint and clear repo warnings/errors that surfaced during verification.
