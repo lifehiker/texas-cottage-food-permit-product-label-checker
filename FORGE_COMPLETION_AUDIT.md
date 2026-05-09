@@ -12,7 +12,7 @@ This audit maps the major PRD requirements to concrete implementation files, rou
 
 - Production Docker runtime with Prisma schema sync on startup
   - `Dockerfile`
-  - Includes standalone output, `.next/static`, `public/`, Prisma files, and runtime DB push on container start
+  - Includes standalone output, `.next/static`, `public/`, Prisma files, targeted Prisma runtime dependencies, removal of build-time `.env`, and runtime DB push on container start
 
 - Prisma schema and seed data
   - `prisma/schema.prisma`
@@ -201,12 +201,17 @@ This audit maps the major PRD requirements to concrete implementation files, rou
 
 ## Verification completed
 
+- `npm run lint`
+  - Passed cleanly after fixing the anonymous default export warning in `eslint.config.mjs`
+
 - `npm run build`
-  - Passed successfully and produced standalone output at `.next/standalone/server.js`
+  - Passed successfully from a clean `.next` directory
+  - Confirmed standalone output exists at `.next/standalone/server.js`
+  - Re-ran successfully after Dockerfile hardening changes
 
 - Dev server smoke test
   - `npm run dev` started successfully
-  - Verified it serves correctly on `http://127.0.0.1:3000`
+  - Verified it serves correctly on `http://127.0.0.1:3001`
   - Verified `200` responses for primary routes:
     - `/`
     - `/texas-cottage-food-law`
@@ -233,6 +238,8 @@ This audit maps the major PRD requirements to concrete implementation files, rou
 - Production server smoke test
   - `npm run start` launched successfully from `.next/standalone/server.js`
   - Verified `200` on `/`
+  - Verified `200` on `/checker/product-eligibility`, `/checker/selling-readiness`, `/label-generator`, and `/dashboard`
+  - Re-verified on a fresh process using `PORT=3002 npm run start`
   - Verified production API responses for eligibility, lead capture, login, mock checkout, and label save
 
 ## Intentionally deferred external-credential items
