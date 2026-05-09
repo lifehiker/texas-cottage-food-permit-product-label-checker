@@ -13,6 +13,7 @@
 - [x] Verify schema coverage against PRD requirements and patch any missing fields/relations needed by workflows.
 - [x] Verify Prisma client generation/build/runtime behavior in local and Docker environments.
 - [x] Verify seed/admin rule data path for initial rule/template content.
+  Fresh deployments that run `prisma db push` without `prisma db seed` now self-seed admin rules and label templates on first `/admin/rules` load via `src/lib/bootstrap.ts`.
 
 ## Auth
 - [x] NextAuth v5 wiring exists.
@@ -78,6 +79,7 @@
   Docker is installed but the daemon is not accessible in this environment: `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`.
 - [x] Verify startup path initializes Prisma DB successfully in container/runtime.
   Clean production rebuild confirmed `.next/standalone/server.js` and `.next/standalone/.next/server/*` exist, and `npm run start` serves successfully from standalone output with working page and API responses.
+  Note: `next dev` replaces the `.next` production output with a development build, so `npm run start` must be validated after a fresh `npm run build`, which is the deployment-relevant sequence.
 
 ## Verification / QA
 - [x] Run `npm run build` and fix all build errors.

@@ -18,6 +18,8 @@ This audit maps the major PRD requirements to concrete implementation files, rou
 - Prisma schema and seed data
   - `prisma/schema.prisma`
   - `prisma/seed.ts`
+  - `src/lib/bootstrap.ts`
+  - Fresh deployments now self-seed admin rule/template records on first admin load even if only `prisma db push` ran during startup
 
 ## Data model
 
@@ -122,6 +124,7 @@ This audit maps the major PRD requirements to concrete implementation files, rou
   - Route: `/admin/rules`
   - API: `/api/admin/rules/[id]`
   - Files:
+    - `src/lib/bootstrap.ts`
     - `src/app/admin/rules/page.tsx`
     - `src/app/api/admin/rules/[id]/route.ts`
 
@@ -242,6 +245,7 @@ This audit maps the major PRD requirements to concrete implementation files, rou
   - Verified `200` on `/checker/product-eligibility`, `/checker/selling-readiness`, `/label-generator`, and `/dashboard`
   - Verified production API responses for eligibility, readiness, lead capture, credentials login, mock checkout, and label save
   - Clean rebuild verification shows the required standalone server assets are present in the emitted bundle, and the verified startup path serves successfully without runtime crashes
+  - Confirmed the deployment-relevant order is `npm run build` then `npm run start`; running `next dev` afterwards overwrites `.next` with development artifacts and is not a valid production-start sequence
 
 ## Intentionally deferred external-credential items
 

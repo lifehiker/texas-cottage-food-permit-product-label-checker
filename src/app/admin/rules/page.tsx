@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { Section } from "@/components/layout/section";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ensureAdminSeedData } from "@/lib/bootstrap";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { notFound } from "next/navigation";
@@ -13,6 +14,7 @@ export default async function AdminRulesPage() {
     notFound();
   }
 
+  await ensureAdminSeedData();
   const rules = await db.eligibilityRule.findMany({ orderBy: { category: "asc" } });
 
   return (
