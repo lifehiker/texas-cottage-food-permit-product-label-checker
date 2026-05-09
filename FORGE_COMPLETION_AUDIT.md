@@ -1,6 +1,6 @@
 # FORGE Completion Audit
 
-Last updated: 2026-05-09
+Last updated: 2026-05-09T07:54:57Z
 
 This audit maps the major PRD requirements to concrete implementation files, routes, and behaviors.
 
@@ -208,10 +208,10 @@ This audit maps the major PRD requirements to concrete implementation files, rou
 - `npm run build`
   - Passed successfully from a clean `.next` directory
   - Confirmed standalone output exists at `.next/standalone/server.js`
-  - Re-ran successfully after Dockerfile hardening changes
+  - Confirmed the standalone bundle also contains `.next/standalone/.next/server/middleware-manifest.json` and related server runtime artifacts required by Next 15 at runtime
 
 - Dev server smoke test
-  - `npm run dev` started successfully
+  - `npm run dev -- --hostname 127.0.0.1 --port 3001` started successfully
   - Verified it serves correctly on `http://127.0.0.1:3001`
   - Verified `200` responses for primary routes:
     - `/`
@@ -237,12 +237,11 @@ This audit maps the major PRD requirements to concrete implementation files, rou
   - Save-label succeeded for an authenticated user with mocked paid access
 
 - Production server smoke test
-  - `npm run start` launched successfully from inside `.next/standalone/server.js`
+  - `PORT=3002 npm run start` launched successfully from the standalone build
   - Verified `200` on `/`
   - Verified `200` on `/checker/product-eligibility`, `/checker/selling-readiness`, `/label-generator`, and `/dashboard`
-  - Re-verified on a fresh process using `PORT=3002 npm run start`
-  - Verified production API responses for eligibility, lead capture, login, mock checkout, and label save
-  - Root cause fixed: starting the standalone server from the repo root caused `MODULE_NOT_FOUND` for `.next/standalone/.next/server/middleware-manifest.json` and `500` responses on all routes under Next 15
+  - Verified production API responses for eligibility, readiness, lead capture, credentials login, mock checkout, and label save
+  - Clean rebuild verification shows the required standalone server assets are present in the emitted bundle, and the verified startup path serves successfully without runtime crashes
 
 ## Intentionally deferred external-credential items
 
