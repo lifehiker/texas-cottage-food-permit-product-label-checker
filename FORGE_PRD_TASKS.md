@@ -74,7 +74,7 @@
 - [x] Verify Dockerfile matches actual repo contents and Prisma/SQLite runtime needs.
   Dockerfile copies the built standalone bundle, `.next/static`, `public/`, Prisma schema, and Prisma runtime dependencies, removes the copied build-time `.env`, and runs `prisma db push` against `/app/prisma/schema.prisma` before boot.
 - [x] Verify standalone production startup path works outside Docker too.
-  Re-verified on 2026-05-09 from a clean `.next` rebuild. `npm run start` launches the standalone server correctly and serves working HTML/API responses.
+  Re-verified on 2026-05-09 from a clean `.next` rebuild. `npm run start` launches the standalone server correctly and serves working HTML/API responses when it is validated in isolation after `npm run build`.
 - [ ] Verify `docker build .` when Docker is available.
   Docker is installed but the daemon is not accessible in this environment: `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`.
 - [x] Verify startup path initializes Prisma DB successfully in container/runtime.
@@ -86,10 +86,13 @@
   Re-verified from a clean `.next` directory on 2026-05-09 to confirm standalone artifacts are generated for deployment.
 - [x] Start the dev server and verify it stays up.
 - [x] Start the production standalone server and verify it stays up.
+- [x] Confirm the production standalone server still serves requests after startup.
+  Re-verified on 2026-05-09 with `PORT=3002 npm run start`, followed by `200` responses on primary routes plus successful eligibility, readiness, lead capture, mock checkout, and post-purchase label-save API calls.
 - [x] Smoke test primary routes.
 - [x] Test interactive forms, buttons, navigation, auth, and guarded paid flows.
 - [x] Re-test production APIs after the standalone launch fix.
   Confirmed successful responses for eligibility, readiness, leads, credentials login, label save, and mock checkout on the standalone production server after the clean rebuild.
+  Important verification note: do not run `next dev` while validating the standalone bundle, because dev mode rewrites `.next` and will invalidate the production build artifacts mid-test.
 - [x] Review UI quality and fix rough edges.
   Mobile header navigation now stays usable on small screens via a horizontal nav chip row in `src/components/layout/site-header.tsx`.
 - [x] Run lint and clear repo warnings/errors that surfaced during verification.
